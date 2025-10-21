@@ -17,7 +17,6 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    // check exists
     const check = await this.db.query('SELECT id FROM users WHERE email = $1', [
       dto.email,
     ]);
