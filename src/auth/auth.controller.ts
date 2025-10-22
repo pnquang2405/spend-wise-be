@@ -36,17 +36,19 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
-    res.cookie('token', result.token, {
-      httpOnly: true,
-      // secure: true,
-      sameSite: 'none',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    const { token, ...rest } = result;
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: true, // bật khi deploy HTTPS
+      sameSite: 'none', // nếu FE khác domain (VD: FE ở localhost:3000, BE ở 4000)
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
+    });
     return {
       code: 200,
       message: 'Login success',
+      data: rest,
     };
   }
 
